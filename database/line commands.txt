@@ -1,0 +1,68 @@
+create docker shared volume to store and share the csv files
+
+docker volume create --name git-miner-volume
+docker inspect volume git-miner-volume
+
+
+
+initializes a mysql server named git-miner-db
+docker run --name git-miner-db -p 34567:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql:latest
+
+enter the mysql shell
+docker exec -it [docker ps id] bash
+
+login into mysql
+mysql -u root -p
+password is root
+
+speedy initialization
+
+show databases;
+create new database git_miner_db
+create database git_miner_db;
+USE git_miner_db;
+CREATE TABLE repo( repo_id SERIAL, repo_name VARCHAR(256) NOT NULL, repo_link VARCHAR(256));
+insert into repo values (NULL, "sample repo a", NULL);
+insert into repo values (NULL, "sample repo b", "sample repo b link");
+CREATE TABLE repo_info (repo_id INTEGER NOT NULL, data_type VARCHAR(256) NOT NULL, data_value_a VARCHAR(256), data_value_b VARCHAR(256) );
+insert into repo_info values (1, "user total commit", "James", "12");
+insert into repo_info values (2, "user total lines", "Killian", "3000");
+CREATE TABLE commits (repo_id INTEGER NOT NULL, hash VARCHAR(256) NOT NULL, author VARCHAR(256) NOT NULL, datetime DATETIME NOT NULL, timezone VARCHAR(256) NOT NULL, code_lines INTEGER NOT NULL);
+insert into commits values (1, "07d1d64592c4df6e79029a7431b036b5bcd5bd02", "zsugvip", STR_TO_DATE("2022-04-05 15:04:31","%Y-%m-%d %H:%i:%s"),"05:18",292);
+show tables;
+select * from repo;
+select * from repo_info;
+select * from commits;
+
+
+insert into repo values (3,'eric-oss-adc-app-engineering',null);
+CREATE TABLE filecommits(
+repo_id INTEGER NOT NULL,
+commit_hash VARCHAR(256) NOT NULL,
+date DATETIME NOT NULL,
+comitter VARCHAR(256) NOT NULL,
+files_in_commit INTEGER NOT NULL,
+number_of_commits INTEGER NOT NULL,
+file_hash VARCHAR(256) NOT NULL,
+repo_name VARCHAR(256) NOT NULL, 
+filename VARCHAR(256) NOT NULL,
+lines_added INTEGER NOT NULL,
+lines_removed INTEGER NOT NULL,
+change_set_max INTEGER NOT NULL,
+change_set_avg INTEGER NOT NULL,
+code_churn_avg INTEGER NOT NULL,
+code_churn_max INTEGER NOT NULL,
+contributor_count INTEGER NOT NULL,
+minor_contributor_count INTEGER NOT NULL,
+hunks_count INTEGER NOT NULL);
+DESC filecommits;
+insert into filecommits values (3,'eric-oss-adc-app-engineering',-8785736894101180000,'.gitmodules',3,1,26,5,12,39,4,2,1);
+
+
+
+Check your application.properties and set IP address to your device's IP address, for port make sure it points to your Docker MYSQL database
+
+
+
+
+
